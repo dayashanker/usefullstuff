@@ -1,0 +1,9 @@
+Listing the Differnt Network status 
+
+netstat -ant | awk '
+/ESTABLISHED|LISTEN|CLOSE_WAIT/ {count[$6]++}
+END {
+  for(s in count) {
+    printf("%12s : %6d\n", s, count[s]);
+  }
+}'
