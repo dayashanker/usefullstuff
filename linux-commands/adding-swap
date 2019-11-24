@@ -1,0 +1,14 @@
+# adding swap (ubuntu)
+sudo fallocate -l 4G /swapfile
+# adding swap (centos)
+sudo dd if=/dev/zero of=/swapfile count=4096 bs=1MiB
+# enabling awap
+sudo chmod 600 /swapfile
+# marking file as swapfile
+sudo mkswap /swapfile
+# enabling swap
+sudo swapon /swapfile
+# backing up fstab
+sudo cp /etc/fstab /etc/fstab.bak
+# adding swap entry to fstab
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
