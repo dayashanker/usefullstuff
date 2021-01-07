@@ -1,0 +1,13 @@
+######################### APM Server Configuration #########################
+
+################################ APM Server ################################
+
+apm-server:
+  # Defines the host and port the server is listening on. Use "unix:/path/to.sock" to listen on a unix domain socket.
+  host: "localhost:8200"
+
+  output.elasticsearch:
+  hosts: ["localhost:9200"]
+
+   
+

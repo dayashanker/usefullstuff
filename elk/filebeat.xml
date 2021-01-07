@@ -1,0 +1,12 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /Users/dayashanker/projects/microservices/work/log/*.log
+    - /Users/dayashanker//projects/microservices/service2/log/*.log
+    - /Users/dayashanker/Downloads/ELK/*.log
+
+
+output.logstash:
+  hosts: ["localhost:5044"]
+
