@@ -1,4 +1,10 @@
 input {
+
+  tcp {
+      port => 5043
+      codec => "json_lines"
+    }
+
   beats {
     port => 5044
   }
@@ -6,29 +12,29 @@ input {
 filter {
   grok {
     match => [ "message",
-               "(?<timestamp>[\d\-\s:\.]*)\s\-\-\s*(?<level>\w*)\s\[(?<service>[\w-]*),(?<trace_id>\w*),(?<session_id>\w*),(?<trace_val>\w*)]\s\--\s(?<process_id>[0-9]*)\s\[\s*(?<port>[\w\-]*)\](?<logclass>[\w\.]*)\s*\:\s*(?<logmessage>.*)"
+               "%{TIMESTAMP_ISO8601:logtime}\s\--\s*%{LOGLEVEL:loglevel}\s\[(?<service>[A-Za-z0-9-]+)\,(?<traceid>[A-Za-z0-9-]+)\,(?<sessionid>[A-Za-z0-9-]+)\,(?<trace_val>[A-Za-z0-9-]+)\]\s*\--\s*(?<process_id>[0-9]*)\s\[(?<port>[A-Za-z0-9-]+)\](?<logclass>[\w\.]+)\s*\:\s(?<logmessage>.*)"
                           ]
   }
   date {
-    match => [ "timestamp" , "yyyy-MM-dd HH:mm:ss.SSS" ]
+    match => [ "logtime" , "yyyy-MM-dd HH:mm:ss.SSS" ]
+    timezone => "Asia/Kolkata"
   }
   mutate {
     remove_field => ["agent","host","source","cloud","ecs","input","log","tags","_index","_score","fields" ]
  }
-	if ([tracel_id] == "") {
-		drop { }
-	}
+  if ([traceid] == "") {
+    drop { }
+  }
   if "Resolving eureka endpoints" in [message] {
     drop { }
   }
-
 }
 output {
-#  stdout {
-#    codec => rubydebug
-#  }
- elasticsearch {
+  stdout {
+    codec => rubydebug
+  }
+elasticsearch {
         hosts => ["elasticsearch:9200"]
     index => "applog-%{[@metadata][version]}-%{+YYYY.MM.dd}"
-}
+  }
 }
