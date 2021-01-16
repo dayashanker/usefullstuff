@@ -1,0 +1,7 @@
+create file config.json in consul-data folder
+
+Command to start Consule agent and server
+
+consul agent -server -config-dir=consul-data &
+
+consul acl bootstarp to generate the acl management token.
